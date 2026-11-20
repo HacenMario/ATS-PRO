@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600">
+  <!-- Union Jack: correct proportions with white borders and offset diagonals -->
+  <rect width="1200" height="600" fill="#012169"/>
+  <!-- white diagonals -->
+  <path d="M0,0 L1200,600 M1200,0 L0,600" stroke="#ffffff" stroke-width="120"/>
+  <!-- red diagonals (offset per Union Jack construction) -->
+  <path d="M0,0 L1200,600" stroke="#C8102E" stroke-width="72"/>
+  <path d="M1200,0 L0,600" stroke="#C8102E" stroke-width="72"/>
+  <clipPath id="uj">
+    <rect width="1200" height="600"/>
+  </clipPath>
+  <g clip-path="url(#uj)">
+    <!-- Saint George cross with white fimbriation -->
+    <path d="M600,0 V600 M0,300 H1200" stroke="#ffffff" stroke-width="200"/>
+    <path d="M600,0 V600 M0,300 H1200" stroke="#C8102E" stroke-width="120"/>
+  </g>
+</svg>

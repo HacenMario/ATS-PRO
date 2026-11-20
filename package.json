@@ -1,0 +1,29 @@
+{
+  "name": "advanced-tasks-supervisor",
+  "version": "1.2.8",
+  "private": true,
+  "description": "Advanced Tasks Supervisor — multi-tenant task management for workshops & factories (Next.js web + Node API + MongoDB)",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=20.9.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "postinstall": "npm run build:packages",
+    "build:packages": "npm run build --workspace @ats/shared --workspace @ats/i18n",
+    "build": "npm run build:packages && npm run build --workspace @ats/api --workspace @ats/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run build:packages && npm run test --workspace @ats/shared --workspace @ats/i18n --workspace @ats/api --workspace @ats/web",
+    "i18n:audit": "node scripts/i18n-audit.mjs",
+    "check:ci": "npm run i18n:audit && npm run typecheck && npm run lint && npm run test && npm run build",
+    "dev:api": "npm run dev --workspace @ats/api",
+    "dev:web": "npm run dev --workspace @ats/web",
+    "seed:superadmin": "npm run seed --workspace @ats/api",
+    "predev:api": "npm run build:packages",
+    "predev:web": "npm run build:packages"
+  }
+}

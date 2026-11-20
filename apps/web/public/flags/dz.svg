@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600">
+  <rect width="900" height="600" fill="#ffffff"/>
+  <rect width="450" height="600" fill="#006233"/>
+  <mask id="dzCrescent">
+    <rect width="900" height="600" fill="#ffffff"/>
+    <circle cx="482" cy="300" r="122" fill="#000000"/>
+  </mask>
+  <circle cx="443" cy="300" r="150" fill="#d21034" mask="url(#dzCrescent)"/>
+  <polygon fill="#d21034" points="524,238 537.9,280.8 583,280.8 546.5,307.3 560.4,350.2 524,323.7 487.6,350.2 501.5,307.3 465,280.8 510.1,280.8"/>
+</svg>

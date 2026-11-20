@@ -1,0 +1,355 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   Advanced Tasks Supervisor — design system
+   Industrial glass identity: soft gradients, glass cards,
+   high-contrast text, clear status colors, full RTL support.
+   ============================================================ */
+
+@theme {
+  --font-sans: "Manrope Variable", "Cairo Variable", "Segoe UI", "Noto Sans", "Noto Sans Arabic", Tahoma, Arial, sans-serif;
+  --font-arabic: "Cairo Variable", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --color-brand-50:  #effcf9;
+  --color-brand-100: #c7f5ec;
+  --color-brand-200: #90ebdb;
+  --color-brand-300: #55d9c6;
+  --color-brand-400: #26c0ac;
+  --color-brand-500: #0da592;
+  --color-brand-600: #0a8577;
+  --color-brand-700: #0b6a61;
+  --color-brand-800: #0c544f;
+  --color-brand-900: #0d4643;
+  --color-ink: #16323d;
+}
+
+/* ---- Vendored variable fonts (no npm dependency, offline-safe) ---- */
+@font-face {
+  font-family: 'Cairo Variable';
+  src: url('/fonts/cairo-arabic-wght-normal.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0898-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: 'Cairo Variable';
+  src: url('/fonts/cairo-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Manrope Variable';
+  src: url('/fonts/manrope-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --font-scale: 1;
+
+  --page-bg: linear-gradient(160deg, #eef3f4 0%, #e3ecf0 45%, #e9eff2 100%);
+  --page-noise: radial-gradient(1200px 500px at 85% -10%, rgba(13, 165, 146, 0.10), transparent 60%),
+                radial-gradient(900px 420px at -10% 20%, rgba(245, 158, 11, 0.07), transparent 55%);
+  --surface: rgba(255, 255, 255, 0.72);
+  --surface-solid: #ffffff;
+  --surface-strong: rgba(255, 255, 255, 0.98);
+  --surface-hover: rgba(255, 255, 255, 0.95);
+  --border: rgba(22, 50, 61, 0.12);
+  --border-strong: rgba(22, 50, 61, 0.22);
+  --text-1: #16323d;
+  --text-2: #45606c;
+  --text-3: #6b8390;
+  --shadow-1: 0 1px 2px rgba(22, 50, 61, 0.06), 0 8px 24px -12px rgba(22, 50, 61, 0.18);
+  --shadow-2: 0 2px 6px rgba(22, 50, 61, 0.08), 0 18px 48px -18px rgba(22, 50, 61, 0.28);
+  --ring: rgba(13, 165, 146, 0.45);
+  --header-bg: rgba(255, 255, 255, 0.75);
+
+  /* status colors (light) */
+  --st-draft: #64748b;
+  --st-scheduled: #0369a1;
+  --st-inprogress: #b45309;
+  --st-reported: #0e7490;
+  --st-review: #c2410c;
+  --st-approved: #15803d;
+  --st-overdue: #dc2626;
+  --st-cancelled: #6b7280;
+}
+
+.dark {
+  --page-bg: linear-gradient(160deg, #0a1016 0%, #0d1520 50%, #0a141a 100%);
+  --page-noise: radial-gradient(1200px 500px at 85% -10%, rgba(38, 192, 172, 0.10), transparent 60%),
+                radial-gradient(900px 420px at -10% 20%, rgba(245, 158, 11, 0.06), transparent 55%);
+  --surface: rgba(255, 255, 255, 0.045);
+  --surface-solid: #101a22;
+  --surface-strong: rgba(15, 24, 32, 0.99);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.20);
+  --text-1: #e8eef1;
+  --text-2: #a9bcc6;
+  --text-3: #7d94a1;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 18px 48px -18px rgba(0, 0, 0, 0.65);
+  --ring: rgba(38, 192, 172, 0.5);
+  --header-bg: rgba(10, 16, 22, 0.72);
+
+  --st-draft: #94a3b8;
+  --st-scheduled: #7dd3fc;
+  --st-inprogress: #fbbf24;
+  --st-reported: #67e8f9;
+  --st-review: #fb923c;
+  --st-approved: #4ade80;
+  --st-overdue: #f87171;
+  --st-cancelled: #9ca3af;
+}
+
+html {
+  font-size: calc(16px * var(--font-scale, 1));
+  scroll-behavior: smooth;
+}
+
+html[lang="ar"] {
+  --font-sans: "Cairo Variable", "Manrope Variable", "Noto Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  background: var(--page-bg);
+  background-attachment: fixed;
+  color: var(--text-1);
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--page-noise);
+  pointer-events: none;
+}
+
+/* ---------- reusable layers ---------- */
+@utility glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+@utility glass-strong {
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-2);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+@layer components {
+  .card { @apply glass rounded-2xl; }
+  .input-base {
+    @apply w-full rounded-xl border px-3.5 py-2.5 text-[0.95rem] outline-none transition
+           placeholder:text-[var(--text-3)];
+    background: var(--surface-solid);
+    border-color: var(--border-strong);
+    color: var(--text-1);
+  }
+  .input-base:hover { border-color: var(--ring); }
+  .input-base:focus-visible { box-shadow: 0 0 0 3px var(--ring); border-color: var(--ring); }
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-xl px-4 py-2.5
+           text-[0.95rem] font-semibold outline-none transition disabled:cursor-not-allowed
+           disabled:opacity-55 focus-visible:ring-2 focus-visible:ring-offset-0;
+    box-shadow: var(--shadow-1);
+  }
+  .btn:focus-visible { box-shadow: 0 0 0 3px var(--ring); }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--color-brand-500), var(--color-brand-700));
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn-ghost {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--text-1);
+  }
+  .btn-ghost:hover:not(:disabled) { background: var(--surface-hover); }
+  .btn-danger {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+    color: #fff;
+  }
+  .btn-danger:hover:not(:disabled) { filter: brightness(1.08); }
+  .btn-sm { @apply px-3 py-1.5 text-[0.85rem] rounded-lg; }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.75rem] font-bold;
+    border: 1px solid var(--border);
+  }
+  .nav-link {
+    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-[0.95rem] font-medium
+           outline-none transition;
+    color: var(--text-2);
+  }
+  .nav-link:hover { background: var(--surface-hover); color: var(--text-1); }
+  .nav-link[data-active="true"] {
+    background: linear-gradient(135deg, rgba(13, 165, 146, 0.16), rgba(13, 165, 146, 0.06));
+    color: var(--text-1);
+    border: 1px solid rgba(13, 165, 146, 0.35);
+    font-weight: 700;
+  }
+  .nav-link:focus-visible { box-shadow: 0 0 0 3px var(--ring); }
+  .section-title { @apply text-[1.05rem] font-extrabold tracking-tight; color: var(--text-1); }
+  .muted { color: var(--text-2); }
+  .faint { color: var(--text-3); }
+  .divider { border-color: var(--border); }
+  .kbd-focus:focus-visible { box-shadow: 0 0 0 3px var(--ring); border-radius: 0.6rem; outline: none; }
+}
+
+/* status dot + tint helpers */
+.tint { background: color-mix(in srgb, var(--tint-color) 14%, transparent); color: var(--tint-color); border-color: color-mix(in srgb, var(--tint-color) 35%, transparent); }
+
+/* number inputs: hide spinners */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+/* datetime inputs keep icons visible in dark */
+.dark input[type="datetime-local"]::-webkit-calendar-picker-indicator { filter: invert(0.85); }
+.dark input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.85); }
+
+/* scrollbar */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+@keyframes ats-fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: ats-fade-up 0.28s ease both; }
+
+@keyframes ats-pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(13, 165, 146, 0.35); }
+  70% { box-shadow: 0 0 0 10px rgba(13, 165, 146, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(13, 165, 146, 0); }
+}
+.animate-pulse-ring { animation: ats-pulse-ring 1.6s ease-out infinite; }
+
+@keyframes ats-toast-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-toast-in { animation: ats-toast-in 0.25s ease both; }
+
+@keyframes ats-modal-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-modal-in { animation: ats-modal-in 0.22s ease both; }
+
+/* ============================================================
+   v1.2.3 aesthetics layer — polish for cards, buttons, modals,
+   badges, backgrounds + attention bounce for task cards.
+   Purely additive: no existing selector is weakened.
+   ============================================================ */
+
+/* ---- backgrounds: one more depth glow, both themes ---- */
+body::before {
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgba(13, 165, 146, 0.10), transparent 60%),
+    radial-gradient(900px 420px at -10% 20%, rgba(245, 158, 11, 0.07), transparent 55%),
+    radial-gradient(700px 460px at 50% 115%, rgba(13, 165, 146, 0.08), transparent 62%);
+}
+.dark body::before {
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgba(38, 192, 172, 0.10), transparent 60%),
+    radial-gradient(900px 420px at -10% 20%, rgba(245, 158, 11, 0.06), transparent 55%),
+    radial-gradient(700px 460px at 50% 115%, rgba(38, 192, 172, 0.07), transparent 62%);
+}
+
+/* ---- cards: top accent hairline + smoother hover lift ---- */
+.card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--color-brand-500) 55%, transparent) 50%, transparent 100%);
+  opacity: 0.5;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.card:hover { border-color: color-mix(in srgb, var(--color-brand-500) 30%, var(--border)); }
+.card:hover::after { opacity: 1; }
+
+/* ---- buttons: sheen, press feedback, ghost glow ---- */
+.btn { transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease, background 0.2s ease; }
+.btn:active:not(:disabled) { transform: scale(0.97); }
+.btn-primary { position: relative; overflow: hidden; }
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.22) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 0.55s ease;
+  pointer-events: none;
+}
+.btn-primary:hover:not(:disabled)::before { transform: translateX(120%); }
+.btn-ghost:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--color-brand-500) 45%, var(--border-strong));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-brand-500) 22%, transparent), var(--shadow-1);
+}
+
+/* ---- chips / badges: gradient tint + crisp border ---- */
+.chip {
+  background: color-mix(in srgb, var(--tint-color, var(--text-3)) 10%, transparent);
+  border-color: color-mix(in srgb, var(--tint-color, var(--text-3)) 30%, transparent);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+}
+.chip.tint {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--tint-color) 16%, transparent), color-mix(in srgb, var(--tint-color) 8%, transparent));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--tint-color) 18%, transparent);
+}
+
+/* ---- modals: stronger entrance + blurred backdrop ---- */
+.animate-modal-in { animation: ats-modal-in 0.26s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* ---- nav links: subtle slide accent ---- */
+.nav-link { transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease; }
+.nav-link:hover { transform: translateX(2px); }
+[dir="rtl"] .nav-link:hover { transform: translateX(-2px); }
+
+/* ---- attention bounce for task cards ----
+   Worker view: scheduled tasks bounce. Supervisor view: tasks waiting
+   for review bounce. Gentle, slow, dignified: one soft hop then a long
+   rest, so the card draws the eye without looking jittery. The global
+   prefers-reduced-motion rule neutralizes it automatically. */
+@keyframes ats-card-bounce {
+  0%, 100% { transform: translateY(0); box-shadow: var(--shadow-1); }
+  10% { transform: translateY(-5px); }
+  22% { transform: translateY(0); }
+  32% { transform: translateY(-2px); }
+  42% { transform: translateY(0); }
+}
+.card-bounce {
+  animation: ats-card-bounce 4.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  border-color: color-mix(in srgb, var(--color-brand-500) 45%, var(--border)) !important;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-brand-500) 25%, transparent), var(--shadow-1);
+}
+.card-bounce:hover { animation-play-state: paused; }
