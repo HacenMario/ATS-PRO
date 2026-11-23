@@ -61,6 +61,8 @@ export function Icon({ name, size = 20 }: { name: string; size?: number }) {
   const common = { width: size, height: size, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, 'aria-hidden': true };
   switch (name) {
     case 'dashboard': return <svg {...common}><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>;
+    case 'reports': return <svg {...common}><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M2.5 20h19"/></svg>;
+    case 'download': return <svg {...common}><path d="M12 3v12"/><path d="M7.5 10.5L12 15l4.5-4.5"/><path d="M4 20h16"/></svg>;
     case 'tasks': return <svg {...common}><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6l1 1 2-2"/><path d="M3.5 12l1 1 2-2"/><circle cx="4.5" cy="18" r="1" fill="currentColor"/></svg>;
     case 'workers': return <svg {...common}><circle cx="9" cy="8" r="3.4"/><path d="M2.8 20c.7-3.4 3.1-5.2 6.2-5.2s5.5 1.8 6.2 5.2"/><circle cx="17" cy="9" r="2.6"/><path d="M16 14.6c2.8.2 4.6 1.7 5.2 4.4"/></svg>;
     case 'workshop': return <svg {...common}><path d="M3 21V10l6 4V10l6 4V10l6 4v7z"/><path d="M3 10V4h4v6"/></svg>;
@@ -125,7 +127,7 @@ export function LanguageSwitcher({ compact = false }: { compact?: boolean }) {
         <span className="hidden sm:inline">{LOCALE_LABELS[locale]}</span>
       </button>
       {open ? (
-        <ul role="listbox" aria-label={t('common.language')} className="glass-strong animate-fade-up absolute end-0 top-full z-50 mt-2 min-w-44 rounded-2xl p-1.5">
+        <ul role="listbox" aria-label={t('common.language')} className="dropdown-panel glass-strong animate-fade-up absolute end-0 top-full z-[85] mt-2 min-w-44 rounded-2xl p-1.5">
           {available.map((l) => (
             <li key={l}>
               <button
@@ -262,7 +264,7 @@ export function NotificationsBell() {
         ) : null}
       </button>
       {open ? (
-        <div className="glass-strong animate-fade-up absolute end-0 top-full z-50 mt-2 w-[min(92vw,22rem)] rounded-2xl p-2">
+        <div className="dropdown-panel glass-strong animate-fade-up absolute end-0 top-full z-[85] mt-2 w-[min(92vw,22rem)] rounded-2xl p-2">
           <div className="flex items-center justify-between px-2 py-1">
             <span className="text-sm font-extrabold" style={{ color: 'var(--text-1)' }}>{t('nav.notifications')}</span>
             {unread > 0 ? (
@@ -368,12 +370,14 @@ export function AppShell({ children }: { children: ReactNode }) {
         { href: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' },
         { href: '/admin', labelKey: 'nav.admin', icon: 'admin' },
         { href: '/tasks', labelKey: 'nav.tasks', icon: 'tasks' },
+        { href: '/reports', labelKey: 'nav.reports', icon: 'reports' },
         { href: '/profile', labelKey: 'nav.profile', icon: 'profile' },
       ]
     : isSupervisor
       ? [
           { href: '/dashboard', labelKey: 'nav.dashboard', icon: 'dashboard' },
           { href: '/tasks', labelKey: 'nav.tasks', icon: 'tasks' },
+          { href: '/reports', labelKey: 'nav.reports', icon: 'reports' },
           { href: '/workers', labelKey: 'nav.workers', icon: 'workers' },
           { href: '/workshop', labelKey: 'nav.workshop', icon: 'workshop' },
           { href: '/profile', labelKey: 'nav.profile', icon: 'profile' },
@@ -468,7 +472,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         {/* Mobile sidebar drawer */}
         {sidebarOpen ? (
-          <div className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true">
+          <div className="fixed inset-0 z-[70] lg:hidden" role="dialog" aria-modal="true">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} aria-hidden="true" />
             <div className="glass-strong animate-fade-up absolute inset-y-0 start-0 w-72 max-w-[85vw]">
               {sidebar}

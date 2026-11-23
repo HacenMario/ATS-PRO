@@ -806,6 +806,9 @@ export async function taskStats(req: Request, workshopId?: string): Promise<{
   workersCount: number; supervisorsCount: number; deliveryWorkersCount: number;
   avgCompletionMs: number | null; avgRating: number | null; pendingReviews: number; perWorker: WorkerStatRow[];
   delivery: { pending: number; accepted: number; delivered: number; myDelivered: number; myEarnings: number };
+  trend: { weekStart: string; created: number; completed: number }[];
+  byPriority: Record<string, number>;
+  onTimeRate: number | null;
 }> {
   const userId = req.auth!.userId;
   const role = req.auth!.role;
@@ -935,6 +938,51 @@ export async function taskStats(req: Request, workshopId?: string): Promise<{
     myEarnings: isDeliveryWorker ? deliveryRows.reduce((s, r) => s + (r.myEarnings ?? 0), 0) : 0,
   };
 
+  // ---- v1.3 reports data: 8-week created/completed trend, priority mix, on-time rate ----
+  // Buckets are UTC Mondays — the SAME truncation $dateTrunc performs in UTC,
+  // so aggregation keys and anchor buckets always line up.
+  const mondayUtc = (d: Date): Date => {
+    const x = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+    x.setUTCDate(x.getUTCDate() - ((x.getUTCDay() + 6) % 7));
+    return x;
+  };
+  const weekMs = 7 * 24 * 3600 * 1000;
+  const anchor = mondayUtc(new Date());
+  const trendSince = new Date(anchor.getTime() - 7 * weekMs);
+  const [createdRows, completedRows, priorityRows, onTimeRows] = await Promise.all([
+    Task.aggregate([
+      { $match: { ...base, createdAt: { $gte: trendSince } } },
+      { $group: { _id: { $dateTrunc: { date: '$createdAt', unit: 'week', startOfWeek: 'monday' } }, n: { $sum: 1 } } },
+    ]),
+    Task.aggregate([
+      { $match: { ...base, status: 'completed_approved' as const, approvedAt: { $gte: trendSince } } },
+      { $group: { _id: { $dateTrunc: { date: '$approvedAt', unit: 'week', startOfWeek: 'monday' } }, n: { $sum: 1 } } },
+    ]),
+    Task.aggregate([
+      { $match: base },
+      { $group: { _id: '$priority', n: { $sum: 1 } } },
+    ]),
+    Task.aggregate([
+      { $match: { ...base, status: 'completed_approved' as const, actualDurationMs: { $ne: null }, plannedDurationMs: { $ne: null } } },
+      { $group: { _id: null, total: { $sum: 1 }, onTime: { $sum: { $cond: [{ $lte: ['$actualDurationMs', '$plannedDurationMs'] }, 1, 0] } } } },
+    ]),
+  ]);
+  const createdByKey = new Map(createdRows.map((r) => [new Date(r._id).getTime(), r.n]));
+  const completedByKey = new Map(completedRows.map((r) => [new Date(r._id).getTime(), r.n]));
+  const trend = Array.from({ length: 8 }, (_, i) => {
+    const ws = new Date(anchor.getTime() - (7 - i) * weekMs);
+    return {
+      weekStart: ws.toISOString(),
+      created: createdByKey.get(ws.getTime()) ?? 0,
+      completed: completedByKey.get(ws.getTime()) ?? 0,
+    };
+  });
+  const byPriority: Record<string, number> = { low: 0, medium: 0, high: 0, urgent: 0 };
+  for (const row of priorityRows) byPriority[row._id as string] = row.n ?? 0;
+  const onTimeRate = onTimeRows[0]?.total
+    ? Math.round(((onTimeRows[0].onTime / onTimeRows[0].total) * 100) * 10) / 10
+    : null;
+
   return {
     total,
     byStatus,
@@ -953,6 +1001,9 @@ export async function taskStats(req: Request, workshopId?: string): Promise<{
     pendingReviews: pendingReviewsCount,
     perWorker,
     delivery,
+    trend,
+    byPriority,
+    onTimeRate,
   };
 }
 

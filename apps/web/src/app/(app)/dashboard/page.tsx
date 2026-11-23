@@ -144,6 +144,9 @@ export default function DashboardPage() {
           {isSupervisor || isSuperAdmin ? (
             <Link href="/tasks/new" className="btn btn-primary btn-sm"><Icon name="plus" size={15} />{t('task.action.newTask')}</Link>
           ) : null}
+          {isSupervisor || isSuperAdmin ? (
+            <Link href="/reports" className="btn btn-ghost btn-sm"><Icon name="reports" size={15} />{t('dash.viewReports')}</Link>
+          ) : null}
           <Link href="/tasks" className="btn btn-ghost btn-sm">{t('dash.allTasks')}</Link>
         </div>
       </div>

@@ -91,9 +91,9 @@
   --surface-hover: rgba(255, 255, 255, 0.08);
   --border: rgba(255, 255, 255, 0.10);
   --border-strong: rgba(255, 255, 255, 0.20);
-  --text-1: #e8eef1;
-  --text-2: #a9bcc6;
-  --text-3: #7d94a1;
+  --text-1: #eef4f7;
+  --text-2: #b9c9d3;
+  --text-3: #869cac;
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.5);
   --shadow-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 18px 48px -18px rgba(0, 0, 0, 0.65);
   --ring: rgba(38, 192, 172, 0.5);
@@ -353,3 +353,200 @@ body::before {
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-brand-500) 25%, transparent), var(--shadow-1);
 }
 .card-bounce:hover { animation-play-state: paused; }
+
+/* ============================================================
+   v1.3 design update — reports & analytics, mobile-first polish,
+   zero-zoom guarantee, unified stacking order, richer controls.
+   Additive by design: every existing selector keeps its contract.
+   ============================================================ */
+
+/* ---- 0. Zoom prevention (manual + iOS keyboard auto-zoom) ----
+   iOS zooms any focused input whose computed font-size is < 16px.
+   max(16px, 1em) keeps every field at ≥16px at EVERY font scale, and the
+   viewport meta (maximumScale=1) closes the loop. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+.input-base,
+input[type="text"], input[type="number"], input[type="tel"], input[type="email"],
+input[type="search"], input[type="url"], input[type="password"],
+input[type="date"], input[type="time"], input[type="datetime-local"],
+select, textarea { font-size: max(16px, 1em); }
+button, a, label, input, select, textarea { touch-action: manipulation; }
+
+/* ---- 1. Unified stacking order (dropdowns NEVER hide behind dialogs) ----
+   header 40 · drawer 70 · modal 80 · dropdown 85 · lightbox 86 · toast 100 */
+:root {
+  --z-header: 40;
+  --z-drawer: 70;
+  --z-modal: 80;
+  --z-dropdown: 85;
+  --z-lightbox: 86;
+  --z-toast: 100;
+}
+
+/* floating panels: shared look + safe scrolling on small screens */
+.dropdown-panel {
+  max-height: min(72dvh, 28rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: var(--shadow-2);
+  scrollbar-width: thin;
+}
+
+/* ---- 2. Native selects: custom chevron, perfect in RTL and dark ---- */
+select.input-base {
+  padding-inline-end: 2.35rem;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5L6 8l3.5-3.5' fill='none' stroke='%2345606c' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.8rem center;
+}
+[dir="rtl"] select.input-base { background-position: left 0.8rem center; }
+.dark select.input-base {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5L6 8l3.5-3.5' fill='none' stroke='%23b9c9d3' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* ---- 3. Media guards: nothing ever overflows its frame ---- */
+img, svg, video, canvas { max-width: 100%; }
+
+/* ---- 4. Data tables: scroll sideways on phones, become stacked cards ---- */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 0.75rem;
+}
+.data-table { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 0.875rem; }
+.data-table th {
+  padding: 0.5rem 0.75rem;
+  text-align: start;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.data-table td { padding: 0.6rem 0.75rem; border-top: 1px solid var(--border); vertical-align: middle; }
+.data-table tbody tr { transition: background 0.15s ease; }
+.data-table tbody tr:hover { background: var(--surface-hover); }
+
+@media (max-width: 640px) {
+  .data-table { min-width: 0; }
+  .data-table thead { display: none; }
+  .data-table tbody tr {
+    display: block;
+    padding: 0.55rem 0.35rem;
+    border: 1px solid var(--border);
+    border-radius: 0.85rem;
+    margin-bottom: 0.55rem;
+    background: var(--surface);
+  }
+  .data-table tbody tr:hover { background: var(--surface); }
+  .data-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 0;
+    padding: 0.3rem 0.4rem;
+    text-align: end;
+  }
+  .data-table td::before {
+    content: attr(data-label);
+    font-weight: 800;
+    font-size: 0.7rem;
+    color: var(--text-3);
+    text-align: start;
+    flex-shrink: 0;
+  }
+}
+
+/* ---- 5. Reports: weekly trend chart (pure CSS, RTL-safe) ---- */
+.trend-chart {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+  height: 190px;
+  padding-top: 2px;
+}
+.trend-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+.trend-bars {
+  flex: 1;
+  width: 100%;
+  max-width: 46px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+}
+.trend-bar {
+  flex: 1 1 0;
+  max-width: 16px;
+  min-height: 2px;
+  border-radius: 4px 4px 0 0;
+  transform-origin: bottom;
+  animation: ats-bar-grow 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.bar-created { background: linear-gradient(180deg, var(--st-scheduled), color-mix(in srgb, var(--st-scheduled) 65%, transparent)); }
+.bar-completed { background: linear-gradient(180deg, var(--st-approved), color-mix(in srgb, var(--st-approved) 65%, transparent)); }
+.trend-wk { font-size: 0.62rem; font-weight: 700; color: var(--text-3); white-space: nowrap; direction: ltr; }
+.trend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
+.chart-fill { transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes ats-bar-grow {
+  from { transform: scaleY(0); opacity: 0.4; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+
+/* ---- 6. Reports: KPI stat cards (accent hairline like .card) ---- */
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.stat-card::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--color-brand-500) 55%, transparent) 50%, transparent 100%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.stat-card:hover { border-color: color-mix(in srgb, var(--color-brand-500) 30%, var(--border)); }
+
+/* ---- 7. Task comments thread ---- */
+.comment-bubble {
+  border: 1px solid var(--border);
+  border-inline-start: 3px solid var(--color-brand-500);
+  border-radius: 0.9rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--surface-hover);
+  animation: ats-fade-up 0.25s ease both;
+}
+
+/* ---- 8. Touch ergonomics: comfortable targets on phones ---- */
+@media (pointer: coarse) {
+  .btn { min-height: 44px; }
+  .btn-sm { min-height: 38px; }
+  .chip { padding-block: 0.3rem; }
+}
+/* no hover-dependent movement on touch screens (prevents sticky hover lifts) */
+@media (hover: none) {
+  .card:hover, .stat-card:hover { transform: none; }
+}

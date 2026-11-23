@@ -328,7 +328,7 @@ export function MediaLightbox({ media, taskUrl, onClose }: { media: AttachmentPr
   const isVideo = media.mimeType.startsWith('video/');
   return (
     <div
-      className="fixed inset-0 z-[80] flex flex-col items-center justify-center gap-3 bg-black/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[86] flex flex-col items-center justify-center gap-3 bg-black/85 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label={media.filename}
@@ -939,5 +939,81 @@ export function TaskActions({ task, onChanged }: { task: Task; onChanged: () => 
         </div>
       </Modal>
     </>
+  );
+}
+
+/* ---------------- Comments section (task detail page) ---------------- */
+
+/** Dedicated discussion card: every comment in the task's change log as a
+ * readable thread, plus an inline composer. Available to the supervisor, the
+ * assignee and the creator while the task is still open. */
+export function TaskComments({ task, onChanged }: { task: Task; onChanged: () => void }) {
+  const { t, locale } = useLocale();
+  const { user, isSupervisor } = useAuth();
+  const { push } = useToast();
+  const [text, setText] = useState('');
+  const [busy, setBusy] = useState(false);
+
+  const comments = task.changeLog.filter((c) => c.action === 'comment');
+  const active = task.status !== 'completed_approved' && task.status !== 'cancelled';
+  const canComment = active && (isSupervisor || user?.id === task.assigneeId || user?.id === task.createdById);
+
+  const send = async () => {
+    const value = text.trim();
+    if (!value) return;
+    setBusy(true);
+    try {
+      await api(`/api/tasks/${task.id}/comment`, { method: 'POST', body: { text: value } });
+      push('success', t('task.commentPosted'));
+      setText('');
+      onChanged();
+    } catch (err) {
+      push('error', t((err as ApiErrorLike)?.code ?? 'errors.serverError'));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      {comments.length === 0 ? (
+        <p className="text-sm faint">{t('task.commentsEmpty')}</p>
+      ) : (
+        <ul className="space-y-2.5">
+          {comments.map((c, i) => (
+            <li key={`${c.at}-${i}`} className="comment-bubble">
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-0.5">
+                <span className="inline-flex items-center gap-2 text-sm font-extrabold" style={{ color: 'var(--text-1)' }}>
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.62rem] font-black text-white" style={{ background: 'linear-gradient(135deg, var(--color-brand-500), var(--color-brand-700))' }} aria-hidden="true">
+                    {(c.byName ?? '?').trim().charAt(0).toUpperCase()}
+                  </span>
+                  <span className="break-words">{c.byName || '—'}</span>
+                </span>
+                <span className="text-[0.7rem] faint">{formatDateTime(c.at, locale)}</span>
+              </div>
+              <p dir="auto" className="mt-1.5 whitespace-pre-wrap break-words text-sm leading-relaxed" style={{ color: 'var(--text-2)' }}>{c.note}</p>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {canComment ? (
+        <div className="space-y-2 border-t pt-3" style={{ borderColor: 'var(--border)' }}>
+          <Textarea
+            aria-label={t('task.commentPlaceholder')}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder={t('task.commentPlaceholder')}
+            className="min-h-16"
+            maxLength={2000}
+          />
+          <div className="flex justify-end">
+            <Button size="sm" loading={busy} disabled={!text.trim()} onClick={() => void send()}>
+              <Icon name="check" size={14} />{t('task.commentSend')}
+            </Button>
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 }

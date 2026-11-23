@@ -20,6 +20,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  // Prevent BOTH zoom sources on phones: manual pinch-zoom and the automatic
+  // input-focus zoom iOS performs when the keyboard opens. The CSS side keeps
+  // every input at ≥16px (see globals.css) — this is the belt-and-suspenders pair.
+  maximumScale: 1,
+  userScalable: false,
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#eef3f4' },
     { media: '(prefers-color-scheme: dark)', color: '#0a1016' },

@@ -8,7 +8,7 @@ import { useLocale } from '@/providers/locale';
 import { useSilentRefresh } from '@/lib/use-silent-refresh';
 import { Card, LoadingScreen, ErrorState, StatusBadge, PriorityBadge, ProgressBar, Rating } from '@/components/ui';
 import { Icon } from '@/components/layout';
-import { TaskActions, TaskTimeline, TaskAttachments, DeliveryInfo, statusLabel, priorityLabel } from '@/components/tasks';
+import { TaskActions, TaskTimeline, TaskAttachments, TaskComments, DeliveryInfo, statusLabel, priorityLabel } from '@/components/tasks';
 import { formatDateTime, formatDuration } from '@/lib/format';
 import type { Task } from '@ats/shared';
 
@@ -143,6 +143,11 @@ export default function TaskDetailPage({ params }: { params: Promise<{ id: strin
               <TaskAttachments task={task} onChanged={() => void load()} />
             </Card>
           </div>
+
+          <Card>
+            <h2 className="section-title mb-3">{t('task.commentsTitle')}</h2>
+            <TaskComments task={task} onChanged={() => void load()} />
+          </Card>
 
           <Card>
             <h2 className="section-title mb-4">{t('task.timelineTitle')}</h2>

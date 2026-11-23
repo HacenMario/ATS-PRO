@@ -220,6 +220,25 @@ export interface PlatformSettings {
   };
 }
 
+/** One bucket of the 8-week activity trend (reports page). */
+export interface TrendPoint {
+  /** ISO timestamp of the week start (Monday 00:00 local tz). */
+  weekStart: string;
+  created: number;
+  completed: number;
+}
+
+/** Per-worker performance row (dashboard table + reports board). */
+export interface WorkerStatRow {
+  userId: string;
+  name: string;
+  assigned: number;
+  completed: number;
+  late: number;
+  onTime: number;
+  avgRating: number | null;
+}
+
 export interface TaskStats {
   total: number;
   byStatus: Record<TaskStatus, number>;
@@ -241,6 +260,8 @@ export interface TaskStats {
   avgCompletionMs: number | null;
   avgRating: number | null;
   pendingReviews: number;
+  /** performance board rows, sorted by completed desc (top 20) */
+  perWorker: WorkerStatRow[];
   /** active members with the delivery_worker role in the scoped workshops */
   deliveryWorkersCount: number;
   /** delivery pipeline statistics for the scoped workshops */
@@ -253,6 +274,12 @@ export interface TaskStats {
     /** sum of delivery fees earned by the current user (delivery workers only) */
     myEarnings: number;
   };
+  /** created vs completed tasks per week, oldest → newest (8 weeks) */
+  trend: TrendPoint[];
+  /** task count per priority for the scoped workshops */
+  byPriority: Record<TaskPriority, number>;
+  /** share of approved tasks finished within their planned duration (0–100, null when unknown) */
+  onTimeRate: number | null;
 }
 
 /** Stable error codes — the client translates these via the i18n dictionaries. */
