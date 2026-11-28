@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/providers/auth';
 import { useLocale } from '@/providers/locale';
-import { Button, Field, Input, ErrorState } from '@/components/ui';
-import { Icon } from '@/components/layout';
+import { Button, Input, ErrorState } from '@/components/ui';
+import { Icon, LogoMark } from '@/components/layout';
 
 export default function LoginPage() {
   const { user, login } = useAuth();
@@ -38,57 +38,83 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="card p-6 sm:p-8" aria-labelledby="login-title">
-      <h1 id="login-title" className="text-xl font-black" style={{ color: 'var(--text-1)' }}>{t('auth.login.title')}</h1>
-      <p className="mt-1 text-sm muted">{t('auth.login.subtitle')}</p>
-
-      <form onSubmit={submit} className="mt-6 space-y-4" noValidate>
-        <Field label={t('auth.email')} required>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-            required
-            dir="ltr"
-            inputMode="email"
-            placeholder="name@example.com"
-          />
-        </Field>
-        <Field label={t('auth.password')} required>
-          <div className="relative">
-            <Input
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              required
-              dir="ltr"
-              className="!pe-11"
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((v) => !v)}
-              className="kbd-focus absolute end-2 top-1/2 -translate-y-1/2 rounded-lg p-1.5 faint hover:opacity-70"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              <Icon name="profile" size={16} />
-            </button>
+    <section className="card relative overflow-hidden p-6 sm:p-8" aria-labelledby="login-title">
+      <div className="pointer-events-none absolute -end-16 -top-16 h-48 w-48 rounded-full" style={{ background: 'radial-gradient(circle, rgba(99,102,241,.18), transparent 65%)' }} aria-hidden="true" />
+      <div className="relative">
+        <div className="mb-6 flex items-center gap-3">
+          <LogoMark size={46} />
+          <div>
+            <h1 id="login-title" className="text-2xl font-black tracking-tight" style={{ color: 'var(--text-1)' }}>{t('auth.login.title')}</h1>
+            <p className="text-sm muted">{t('auth.login.subtitle')}</p>
           </div>
-        </Field>
+        </div>
 
-        {error ? <ErrorState message={error} /> : null}
+        <form onSubmit={submit} className="space-y-4" noValidate>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="login-email" className="field-label">{t('auth.email')}<span className="text-red-500" aria-hidden="true"> *</span></label>
+            <div className="relative">
+              <span className="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-[var(--text-3)]"><Icon name="mail" size={17} /></span>
+              <Input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                required
+                dir="ltr"
+                inputMode="email"
+                placeholder="name@example.com"
+                className="!ps-11"
+              />
+            </div>
+          </div>
 
-        <Button type="submit" className="w-full" loading={busy} disabled={!email || !password}>
-          {t('auth.submitLogin')}
-        </Button>
-      </form>
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center justify-between gap-2">
+              <label htmlFor="login-password" className="field-label">{t('auth.password')}<span className="text-red-500" aria-hidden="true"> *</span></label>
+              <Link href="/forgot-password" className="text-[0.72rem] font-extrabold text-brand-500 hover:underline">{t('auth.forgotLink')}</Link>
+            </div>
+            <div className="relative">
+              <span className="pointer-events-none absolute start-3.5 top-1/2 -translate-y-1/2 text-[var(--text-3)]"><Icon name="lock" size={17} /></span>
+              <Input
+                id="login-password"
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                required
+                dir="ltr"
+                className="!ps-11 !pe-12"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute end-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-[var(--text-3)] hover:bg-[var(--surface-hover)]"
+                aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
+                title={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
+              >
+                <Icon name={showPassword ? 'eye-off' : 'eye'} size={17} />
+              </button>
+            </div>
+          </div>
 
-      <div className="mt-5 flex flex-col items-center gap-2 text-sm">
-        <Link href="/forgot-password" className="text-brand-500 font-bold hover:underline kbd-focus">{t('auth.forgotLink')}</Link>
-        <p className="muted">
+          {error ? <ErrorState message={error} /> : null}
+
+          <Button type="submit" block size="lg" loading={busy} disabled={!email || !password}>
+            {t('auth.submitLogin')}
+            <Icon name="arrow-right" size={17} className="rtl:rotate-180" />
+          </Button>
+        </form>
+
+        <div className="my-5 flex items-center gap-3 text-[0.68rem] font-bold uppercase tracking-wide faint">
+          <span className="h-px flex-1" style={{ background: 'var(--border)' }} />
+          {t('auth.or')}
+          <span className="h-px flex-1" style={{ background: 'var(--border)' }} />
+        </div>
+
+        <p className="text-center text-sm muted">
           {t('auth.noAccount')}{' '}
-          <Link href="/register" className="text-brand-500 font-bold hover:underline kbd-focus">{t('nav.register')}</Link>
+          <Link href="/register" className="font-extrabold text-brand-500 hover:underline kbd-focus">{t('nav.register')}</Link>
         </p>
       </div>
     </section>

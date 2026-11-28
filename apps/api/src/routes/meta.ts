@@ -12,7 +12,7 @@ const router = Router();
 router.get('/', async (_req: Request, res: Response) => {
   const settings = await getPlatformSettings();
   res.json({
-    app: { name: 'Advanced Tasks Supervisor', version: '1.0.0' },
+    app: { name: 'Advanced Tasks Supervisor', version: '2.0.0' },
     registrationMode: settings.registrationMode,
     enabledLanguages: settings.enabledLanguages,
     defaultLanguage: settings.defaultLanguage,

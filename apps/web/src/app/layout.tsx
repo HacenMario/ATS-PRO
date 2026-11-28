@@ -7,14 +7,17 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'ATS PRO - Advanced Tasks Supervisor',
   description: 'إدارة مهام العاملين في الورش والمصانع — Gestion des tâches des ouvriers — Workshop & factory task management',
+  applicationName: 'ATS PRO',
   manifest: '/manifest.webmanifest',
+  appleWebApp: { capable: true, statusBarStyle: 'black-translucent', title: 'ATS PRO' },
   icons: {
     icon: [
       { url: '/logo-icon.svg', type: 'image/svg+xml' },
       { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
     ],
-    apple: '/icons/icon-192.png',
+    apple: '/icons/icon-512.png',
   },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
@@ -26,8 +29,8 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#eef3f4' },
-    { media: '(prefers-color-scheme: dark)', color: '#0a1016' },
+    { media: '(prefers-color-scheme: light)', color: '#f7f9ff' },
+    { media: '(prefers-color-scheme: dark)', color: '#060913' },
   ],
 };
 
@@ -47,6 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </head>
       <body className="antialiased">
         <RootProviders defaultLocale={ssrLocale}>{children}</RootProviders>
+        <Script id="ats-sw-register" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: "if('serviceWorker' in navigator){window.addEventListener('load',function(){try{navigator.serviceWorker.register('/sw.js',{scope:'/'})}catch(e){}})}" }} />
       </body>
     </html>
   );

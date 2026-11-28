@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>ATS PRO — غير متصل</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    font-family: 'Cairo', 'Segoe UI', Tahoma, sans-serif;
+    background: linear-gradient(168deg, #060913, #0d1424);
+    color: #f4f7ff;
+  }
+  .card {
+    max-width: 26rem;
+    text-align: center;
+    padding: 32px 28px;
+    border-radius: 24px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(14px);
+  }
+  .mark { width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px; background: linear-gradient(135deg,#6366f1,#06b6d4); display: grid; place-items: center; }
+  h1 { font-size: 1.25rem; margin-bottom: 8px; }
+  p { font-size: .9rem; line-height: 1.7; color: rgba(255,255,255,.7); }
+  button {
+    margin-top: 20px; padding: 12px 22px; border-radius: 12px; border: 0;
+    font-weight: 700; font-size: .95rem; color: #fff;
+    background: linear-gradient(135deg,#6366f1,#4f46e5); cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="mark">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 2l20 20" /><path d="M8.5 16.5a5 5 0 0 1 7 0" /><path d="M5 12.5a10 10 0 0 1 4-2.3M15.5 10.4a10 10 0 0 1 3.5 2.1" /><path d="M12 20h.01" />
+      </svg>
+    </div>
+    <h1>أنت غير متصل بالإنترنت</h1>
+    <p>لا يمكن تحميل ATS PRO الآن. تحقق من اتصالك بالشبكة ثم أعد المحاولة — سيتم عرض أحدث نسخة محفوظة تلقائياً عند توفرها.</p>
+    <button onclick="location.reload()">إعادة المحاولة</button>
+  </div>
+</body>
+</html>

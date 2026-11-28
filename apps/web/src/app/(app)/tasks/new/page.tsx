@@ -7,6 +7,7 @@ import { useAuth } from '@/providers/auth';
 import { useLocale } from '@/providers/locale';
 import { useToast } from '@/providers/toast';
 import { Button, Card, Field, Input, Select, Textarea, Segmented, ErrorState } from '@/components/ui';
+import { PageHeader } from '@/components/layout';
 import { fromLocalInput } from '@/lib/format';
 import type { WorkerOption } from '@/components/tasks';
 import { TASK_PRIORITIES } from '@ats/shared';
@@ -102,8 +103,8 @@ export default function NewTaskPage() {
   const canPublish = Boolean(assigneeId && plannedStart && plannedEnd && plannedEnd > plannedStart);
 
   return (
-    <div className="mx-auto max-w-2xl">
-      <h1 className="mb-4 text-xl font-black tracking-tight" style={{ color: 'var(--text-1)' }}>{t('task.newTitle')}</h1>
+    <div className="mx-auto max-w-2xl space-y-4">
+      <PageHeader title={t('task.newTitle')} subtitle={t('task.newHint')} />
 
       <form onSubmit={submit} className="space-y-4" noValidate>
         <Card className="space-y-4">

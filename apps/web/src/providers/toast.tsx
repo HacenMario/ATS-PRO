@@ -50,14 +50,17 @@ export function useToast(): ToastCtx {
   return ctx;
 }
 
-/** Renders the toast stack — mounted once in the root layout. */
+/** Renders the toast stack — mounted once in the app shell. */
 export function ToastViewport({ t }: { t: (k: string) => string }) {
   const { toasts, dismiss } = useToast();
   return (
-    <div aria-live="polite" className="pointer-events-none fixed inset-x-0 bottom-4 z-[100] flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:end-6 sm:items-end">
+    <div
+      aria-live="polite"
+      className="pointer-events-none fixed inset-x-3 bottom-[calc(5.6rem+var(--safe-b))] z-[100] flex flex-col items-stretch gap-2 sm:inset-x-auto sm:bottom-6 sm:end-6 sm:w-96"
+    >
       {toasts.map((toast) => (
-        <div key={toast.id} className="glass-strong animate-toast-in pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl p-3.5">
-          <span className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-sm font-black text-white ${KIND_STYLES[toast.kind].bar}`} aria-hidden>
+        <div key={toast.id} className="glass-strong animate-toast-in pointer-events-auto flex w-full items-start gap-3 rounded-2xl p-3.5">
+          <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm font-black text-white ${KIND_STYLES[toast.kind].bar}`} aria-hidden>
             {KIND_STYLES[toast.kind].icon}
           </span>
           <div className="min-w-0 flex-1">

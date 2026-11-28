@@ -163,65 +163,73 @@ export function TaskFilters({ filters, onChange, workers, showWorkerFilter = tru
   const set = (patch: Partial<TaskFilterState>) => onChange({ ...filters, ...patch });
 
   return (
-    <div className="card flex flex-col gap-3 p-4" role="search" aria-label={t('task.filters.title')}>
-      {/* Row 1: search (full width, its own row to avoid any overlap in every language) */}
-      <div className="relative w-full">
-        <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center faint" aria-hidden="true"><Icon name="search" size={16} /></span>
-        <Input
-          value={filters.q}
-          onChange={(e) => set({ q: e.target.value })}
-          placeholder={t('task.searchPlaceholder')}
-          className="!ps-9"
-          aria-label={t('common.search')}
-        />
-      </div>
-      {/* Row 2: filters wrap with stable minimum widths (no overlap in fr/en/ar) */}
-      <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
-        <Select value={filters.sort} onChange={(e) => set({ sort: e.target.value as TaskFilterState['sort'] })} aria-label={t('task.filters.sort')} className="!w-full sm:!w-auto sm:!min-w-44">
-          <option value="newest">{t('task.sort.newest')}</option>
-          <option value="oldest">{t('task.sort.oldest')}</option>
-          <option value="dueAsc">{t('task.sort.dueAsc')}</option>
-          <option value="dueDesc">{t('task.sort.dueDesc')}</option>
-          <option value="priority">{t('task.sort.priority')}</option>
-        </Select>
-        <Select value={filters.status} onChange={(e) => set({ status: e.target.value as TaskFilterState['status'] })} aria-label={t('task.filters.status')} className="!w-full sm:!w-auto sm:!min-w-44">
-          <option value="all">{t('common.status')}: {t('common.all')}</option>
-          {TASK_STATUSES.map((st) => (
-            <option key={st} value={st}>{statusLabel(locale, st)}</option>
-          ))}
-        </Select>
-        <Select value={filters.priority} onChange={(e) => set({ priority: e.target.value as TaskFilterState['priority'] })} aria-label={t('task.filters.priority')} className="!w-full sm:!w-auto sm:!min-w-40">
-          <option value="all">{t('common.priority')}: {t('common.all')}</option>
-          {TASK_PRIORITIES.map((pr) => (
-            <option key={pr} value={pr}>{priorityLabel(locale, pr)}</option>
-          ))}
-        </Select>
-        {showWorkerFilter ? (
-          <Select value={filters.workerId} onChange={(e) => set({ workerId: e.target.value })} aria-label={t('task.filters.worker')} className="!w-full sm:!w-auto sm:!min-w-44">
-            <option value="">{t('task.filters.allWorkers')}</option>
-            {workers.map((w) => (
-              <option key={w.id} value={w.id}>{w.name}</option>
+    <div className="flex flex-col gap-3" role="search" aria-label={t('task.filters.title')}>
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6">
+        <label className="flex min-w-0 flex-col gap-1">
+          <span className="text-[0.66rem] font-extrabold uppercase tracking-wide faint">{t('task.filters.sort')}</span>
+          <Select value={filters.sort} onChange={(e) => set({ sort: e.target.value as TaskFilterState['sort'] })} aria-label={t('task.filters.sort')} className="!w-full">
+            <option value="newest">{t('task.sort.newest')}</option>
+            <option value="oldest">{t('task.sort.oldest')}</option>
+            <option value="dueAsc">{t('task.sort.dueAsc')}</option>
+            <option value="dueDesc">{t('task.sort.dueDesc')}</option>
+            <option value="priority">{t('task.sort.priority')}</option>
+          </Select>
+        </label>
+        <label className="flex min-w-0 flex-col gap-1">
+          <span className="text-[0.66rem] font-extrabold uppercase tracking-wide faint">{t('common.status')}</span>
+          <Select value={filters.status} onChange={(e) => set({ status: e.target.value as TaskFilterState['status'] })} aria-label={t('task.filters.status')} className="!w-full">
+            <option value="all">{t('common.all')}</option>
+            {TASK_STATUSES.map((st) => (
+              <option key={st} value={st}>{statusLabel(locale, st)}</option>
             ))}
           </Select>
+        </label>
+        <label className="flex min-w-0 flex-col gap-1">
+          <span className="text-[0.66rem] font-extrabold uppercase tracking-wide faint">{t('common.priority')}</span>
+          <Select value={filters.priority} onChange={(e) => set({ priority: e.target.value as TaskFilterState['priority'] })} aria-label={t('task.filters.priority')} className="!w-full">
+            <option value="all">{t('common.all')}</option>
+            {TASK_PRIORITIES.map((pr) => (
+              <option key={pr} value={pr}>{priorityLabel(locale, pr)}</option>
+            ))}
+          </Select>
+        </label>
+        {showWorkerFilter ? (
+          <label className="flex min-w-0 flex-col gap-1">
+            <span className="text-[0.66rem] font-extrabold uppercase tracking-wide faint">{t('task.filters.worker')}</span>
+            <Select value={filters.workerId} onChange={(e) => set({ workerId: e.target.value })} aria-label={t('task.filters.worker')} className="!w-full">
+              <option value="">{t('task.filters.allWorkers')}</option>
+              {workers.map((w) => (
+                <option key={w.id} value={w.id}>{w.name}</option>
+              ))}
+            </Select>
+          </label>
         ) : null}
-        <Input type="date" value={filters.from} onChange={(e) => set({ from: e.target.value })} aria-label={t('task.filters.dateFrom')} className="!w-full sm:!w-auto" />
-        <Input type="date" value={filters.to} onChange={(e) => set({ to: e.target.value })} aria-label={t('task.filters.dateTo')} className="!w-full sm:!w-auto" />
+        <label className="flex min-w-0 flex-col gap-1">
+          <span className="text-[0.66rem] font-extrabold uppercase tracking-wide faint">{t('task.filters.dateFrom')}</span>
+          <Input type="date" value={filters.from} onChange={(e) => set({ from: e.target.value })} aria-label={t('task.filters.dateFrom')} className="!w-full" />
+        </label>
+        <label className="flex min-w-0 flex-col gap-1">
+          <span className="text-[0.66rem] font-extrabold uppercase tracking-wide faint">{t('task.filters.dateTo')}</span>
+          <Input type="date" value={filters.to} onChange={(e) => set({ to: e.target.value })} aria-label={t('task.filters.dateTo')} className="!w-full" />
+        </label>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2">
         {showMine ? (
-          <label className="flex items-center gap-2 text-sm font-bold sm:col-span-2" style={{ color: 'var(--text-1)' }}>
+          <label className="flex cursor-pointer items-center gap-2 rounded-xl px-2 py-1.5 text-[0.8rem] font-bold" style={{ color: 'var(--text-1)' }}>
             <input type="checkbox" checked={filters.mine} onChange={(e) => set({ mine: e.target.checked })} className="h-4 w-4 accent-[var(--color-brand-500)]" />
             {t('task.filters.mine')}
           </label>
-        ) : null}
-        <Button variant="ghost" size="sm" onClick={() => onChange({ ...INITIAL_FILTERS })} className="sm:col-span-2 sm:w-fit">{t('common.resetFilters')}</Button>
+        ) : <span />}
+        <Button variant="ghost" size="sm" onClick={() => onChange({ ...INITIAL_FILTERS })}>{t('common.resetFilters')}</Button>
       </div>
     </div>
   );
 }
 
-export function filtersToQuery(f: TaskFilterState, page: number): string {
+export function filtersToQuery(f: TaskFilterState, page: number, pageSize = 12): string {
   const params = new URLSearchParams();
   params.set('page', String(page));
-  params.set('pageSize', '12');
+  params.set('pageSize', String(pageSize));
   if (f.status !== 'all') params.set('status', f.status);
   if (f.priority !== 'all') params.set('priority', f.priority);
   if (f.workerId) params.set('workerId', f.workerId);
@@ -263,8 +271,8 @@ export function TaskTimeline({ task }: { task: Task }) {
       {task.changeLog.length === 0 ? (
         <p className="text-sm faint">{t('common.noResults')}</p>
       ) : (
-        <ol className="relative space-y-4 ps-5">
-          <span className="absolute inset-y-1 start-[7px] w-px" style={{ background: 'var(--border-strong)' }} aria-hidden="true" />
+        <ol className="relative space-y-3 ps-6">
+          <span className="absolute inset-y-2 start-[7px] w-px" style={{ background: 'var(--border-strong)' }} aria-hidden="true" />
           {[...task.changeLog].reverse().map((entry, i) => {
             // Precise phrasing: a draft creation, a reassignment, an attachment
             // removal, the delivery lifecycle and the overdue sweep each get
@@ -292,16 +300,45 @@ export function TaskTimeline({ task }: { task: Task }) {
             const noteInPhrase = entry.action === 'set_progress' || entry.action === 'return' || entry.action === 'attach'
               || (entry.action === 'update' && entry.field === 'assigneeId') || entry.note === 'details'
               || entry.action === 'delivery_requested';
+            const actionIcon = entry.to === 'overdue' ? 'alert-circle'
+              : entry.action === 'create' ? 'plus'
+                : entry.action === 'start' ? 'play'
+                  : entry.action === 'report_done' ? 'flag'
+                    : entry.action === 'begin_review' ? 'eye'
+                      : entry.action === 'approve' ? 'check-circle'
+                        : entry.action === 'return' ? 'return'
+                          : entry.action === 'cancel' ? 'cancel'
+                            : entry.action === 'set_progress' ? 'trending'
+                              : entry.action === 'comment' ? 'message'
+                                : entry.action === 'attach' ? 'paperclip'
+                                  : entry.action === 'update' ? 'edit'
+                                    : entry.action === 'delivery_requested' || entry.action === 'delivery_accepted' || entry.action === 'delivery_done' ? 'pin'
+                                      : 'clock';
+            const isMilestone = entry.action === 'approve' || entry.action === 'report_done' || entry.action === 'start' || entry.action === 'create';
             return (
               <li key={`${entry.at}-${i}`} className="relative">
-                <span className="absolute -start-5 top-1.5 h-3 w-3 rounded-full border-2" style={{ background: 'var(--surface-solid)', borderColor: 'var(--color-brand-500)' }} aria-hidden="true" />
-                <p dir="auto" className="text-sm font-bold" style={{ color: 'var(--text-1)' }}>
-                  {entry.byName || '—'} <span className="font-semibold muted">{label}</span>
-                </p>
-                <p className="text-xs faint">{formatDateTime(entry.at, locale)}</p>
-                {entry.note && !noteInPhrase ? (
-                  <p dir="auto" className="mt-1 rounded-lg px-2 py-1 text-xs leading-relaxed muted" style={{ background: 'var(--surface-hover)' }}>{entry.note}</p>
-                ) : null}
+                <span
+                  className="absolute -start-6 top-1.5 flex h-6 w-6 items-center justify-center rounded-full border"
+                  style={{
+                    background: isMilestone ? 'color-mix(in srgb, var(--color-brand-500) 14%, var(--surface-solid))' : 'var(--surface-solid)',
+                    borderColor: isMilestone ? 'var(--color-brand-500)' : 'var(--border-strong)',
+                    color: isMilestone ? 'var(--color-brand-500)' : 'var(--text-3)',
+                  }}
+                  aria-hidden="true"
+                >
+                  <Icon name={actionIcon} size={12} />
+                </span>
+                <div className="rounded-2xl border p-3" style={{ borderColor: 'var(--border)', background: 'var(--surface-hover)' }}>
+                  <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-0.5">
+                    <p dir="auto" className="min-w-0 text-[0.86rem] font-extrabold" style={{ color: 'var(--text-1)' }}>
+                      {entry.byName || '—'} <span className="font-semibold muted">{label}</span>
+                    </p>
+                    <span className="shrink-0 text-[0.68rem] font-bold faint">{formatDateTime(entry.at, locale)}</span>
+                  </div>
+                  {entry.note && !noteInPhrase ? (
+                    <p dir="auto" className="mt-1.5 whitespace-pre-wrap break-words rounded-lg px-2.5 py-1.5 text-xs leading-relaxed muted" style={{ background: 'var(--surface-solid)' }}>{entry.note}</p>
+                  ) : null}
+                </div>
               </li>
             );
           })}
